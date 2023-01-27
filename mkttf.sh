@@ -102,9 +102,10 @@ if [ "$1" = "-h" -o $# -lt 4 ]; then
 	exit 1
 fi
 
+has_mkitalic=1
 # Check for needed programs:
 if ! in_path mkitalic; then
-	error 2 'mkitalic not found in your PATH.'
+	has_mkitalic=0
 elif ! in_path potrace; then
     error 2 'potrace not found in your PATH.'
 fi
@@ -135,12 +136,21 @@ mkdir -p Normal Bold Italic 'Bold Italic' || error 4 'Could not create target di
 echo 'Generating italic BDF files...'
 for bdf in "$SRCDIR"/ter-u*n.bdf; do
 	BDF_BASENAME="$(basename "$bdf" n.bdf)"
-	mkitalic < "$bdf" > "${SRCDIR}/${BDF_BASENAME}i.bdf"
-	mkitalic < "${bdf%n.bdf}b.bdf" > "${SRCDIR}/${BDF_BASENAME}BI.bdf"
+	if [ "$has_mkitalic" = 1 ]; then \
+		mkitalic < "$bdf" > "${SRCDIR}/${BDF_BASENAME}i.bdf"
+		mkitalic < "${bdf%n.bdf}b.bdf" > "${SRCDIR}/${BDF_BASENAME}BI.bdf"
+	fi
 done
 
 # Generate the TTF fonts.
-for weight in Normal Bold Italic 'Bold Italic'; do
+{
+	echo Normal
+	echo Bold
+	if [ "$has_mkitalic" = 1 ]; then \
+		echo Italic
+		echo Bold Italic
+	fi
+} | while read weight; do \
 	echo "Generating ${weight} font..."
 	cd "$weight"
 
@@ -162,7 +172,7 @@ for weight in Normal Bold Italic 'Bold Italic'; do
 		-C "; Copyright (C) $(date '+%Y') Tilman Blumenbach; Licensed under the SIL Open Font License, Version 1.1" \
 		-A ' -a -1' -V "${FONTVER}" -O \
 		"$@" \
-		"$SRCDIR"/ter-u*"${FILE_SUFFIX}.bdf"
+		"$SRCDIR"/ter-u12"${FILE_SUFFIX}.bdf"
 
 	if [ $? -gt 0 ]; then
 		error 5 "Could not run mkttf.py!"
