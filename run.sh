@@ -9,7 +9,16 @@ if [ "$1" = "-h" ]; then
 fi
 dir="$(dirname "$0")"
 
+echo "Monospace..." >&2
 AUTOTRACE="$(realpath "$dir/potrace-blocky.sh")" "$dir"/mkttf.py -f Creep2 -n Creep2-Regular -N 'Creep2 Regular' -C "; Original copyright (c) 2016 romeovs; Licensed under the MIT License; Modified" -A ' -a -1' -V 2.2 -O --em-size 110 --adjust-width 1 "$@" "$dir"/creep2/creep2-11.bdf
+exitcode=$?
+if [ "$exitcode" -gt 0 ]; then \
+	echo "mkttf.py exited with code $exitcode" >&2
+	exit "$exitcode"
+fi
+
+echo "Proportional..." >&2
+AUTOTRACE="$(realpath "$dir/potrace-blocky.sh")" "$dir"/mkttf.py -f Creep2Proportional -n Creep2Proportional-Regular -N 'Creep2Proportional Regular' -C "; Copyright (c) 2016 romeovs, 2025 vftdan; Licensed under the MIT License" -A ' -a -1' -V 2.2 -O --em-size 110 --adjust-width 1 "$@" "$dir"/creep2/creep2-proportional-11.bdf
 exitcode=$?
 if [ "$exitcode" -gt 0 ]; then \
 	echo "mkttf.py exited with code $exitcode" >&2
