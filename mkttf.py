@@ -48,6 +48,7 @@ _argNameFontAttrMap = {
     'weight': 'weight',
     'copyright': 'copyright',
     'font_version': 'version',
+    'em_size': 'em',
 }
 
 # Determines which fsSelection and macStyle bits in the OS/2 table get set
@@ -167,6 +168,11 @@ def initArgumentParser():
             help='Do not import the largest font into the glyph background. This is useful only '
                  'when the font already has a suitable glyph background, and you do not want to '
                  'overwrite it. Only for special use cases.'
+    )
+    argParser.add_argument(
+            '--em-size',
+            type=int,
+            help='Font em size (default: taken from first BDF file or is 1000?).'
     )
 
     return argParser
