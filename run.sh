@@ -9,4 +9,4 @@ if [ "$1" = "-h" -o $# -ne 2 ]; then
 fi
 dir="$(dirname "$0")"
 
-AUTOTRACE="$(realpath "$dir/potrace-blocky.sh")" "$dir"/mkttf.sh "$1" "$2" TerminusPixelated12pt TerminusPixelated12pt --em-size 12
+AUTOTRACE="$(realpath "$dir/potrace-blocky.sh")" "$dir"/mkttf.sh "$1" "$2" TerminusPixelated12pt TerminusPixelated12pt --em-size 120
