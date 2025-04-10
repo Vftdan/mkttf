@@ -174,6 +174,12 @@ def initArgumentParser():
             type=int,
             help='Font em size (default: taken from first BDF file or is 1000?).'
     )
+    argParser.add_argument(
+            '--adjust-width',
+            type=int,
+            default=0,
+            help='Add the same value to each glyph advance width.'
+    )
 
     return argParser
 
@@ -277,6 +283,13 @@ baseFont.selection.all()
 baseFont.autoTrace()
 baseFont.addExtrema()
 baseFont.simplify()
+
+# In some fonts each character width is 1 less than it should be (e. g.
+# 12pt bitmap font with 5px-wide glyph scaled to em size of 1200 will have
+# 499pt character width instead of 500pt)
+if args.adjust_width:
+    for glyph in baseFont.glyphs():
+        glyph.width += args.adjust_width
 
 # Do we need to fixup the font for use with Visual Studio?
 # Taken from http://www.electronicdissonance.com/2010/01/raster-fonts-in-visual-studio-2010.html
